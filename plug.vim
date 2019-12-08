@@ -30,7 +30,7 @@ Plug 'MattesGroeger/vim-bookmarks'
 
 " Language support
 Plug 'plasticboy/vim-markdown'
-Plug 'fatih/vim-go', { 'tag': '*' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'kiteco/vim-plugin'
 
 " Colorschemes
