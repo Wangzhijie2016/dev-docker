@@ -1,0 +1,27 @@
+FROM golang
+
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
+    apt-get update && \
+                apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip && \
+                apt-get install -y git curl zsh wget
+
+RUN git clone https://github.com/neovim/neovim.git
+RUN cd neovim && make && make install
+
+RUN curl -fLo /root/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+COPY init.vim /root/.config/nvim/init.vim
+
+RUN apt-get install -y apt-utils
+
+RUN apt-get install -y nodejs npm tmux
+
+RUN nvim +PlugInstall +qall
+
+RUN nvim  -c 'CocInstall -sync coc-json coc-lists coc-snippets coc-yaml coc-highlight coc-git coc-flow|q'
+
+COPY bin /go/bin
+COPY coc-settings.json /root/.config/nvim/coc-settings.json
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+# RUN nvim -c "execute 'silent GoInstallBinaries' | execute 'quit'"
